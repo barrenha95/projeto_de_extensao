@@ -70,6 +70,15 @@ class JsonOperations:
         if len(str(id5)) == 0:
             raise Exception("Last five id is blank.")
 
+    def read_file(self):
+        with open(self.path, 'r') as openfile:
+            json_object = json.load(openfile)
+        return json_object
+
+    def check_user(self, first, last, id5):
+        match = first + "_" + last + "_" + str(id5)
+        print(match)
+        
     #def add_user(self, first, last, id5):
         
         
@@ -77,3 +86,5 @@ class JsonOperations:
 if __name__ == '__main__':
     jsonoperations = JsonOperations()
     jsonoperations.input_validation(first = 'teste', last = 'teste2', id5 = 12345)
+    jsonoperations.read_file()
+    jsonoperations.check_user(first = 'teste', last = 'teste2', id5 = 12345)
