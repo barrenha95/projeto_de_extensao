@@ -34,6 +34,13 @@ class JsonOperations:
 
     def input_validation(self, first, last, id5):
 
+        """
+        Validation of the inputs:
+        - first name must be str with less than 10 characters
+        - last name must be str with less than 10 characters
+        - last 5 id numbers must be int and have 5 characters
+        """        
+
         try:
             str(first)
         except: 
@@ -76,6 +83,11 @@ class JsonOperations:
         return json_object
 
     def check_user(self, first, last, id5):
+        """
+        Check if the given user info already exists:
+        - Call read function
+        - If the "match" column matches with the JSON means the user already exists
+        """          
         match = first + "_" + last + "_" + str(id5)
         print(match)
         
