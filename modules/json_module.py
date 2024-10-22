@@ -21,12 +21,7 @@ class JsonOperations:
         
         if check_file == False:
             dictionary = {
-                        "match":"user_admin_11111", "values":
-                            {
-                            "first":"user",
-                            "last" :"admin",
-                            "id5"  :"11111"
-                            }
+                        "user_admin_11111": {"first":"user","last" :"admin","id5"  :"11111"}
             }
         
             json_object = json.dumps(dictionary, indent=4)
@@ -94,14 +89,59 @@ class JsonOperations:
         file = self.read_file()
 
         try:
-            finder = list(file.keys())[list(file.values()).index(match)]
+            finder = list(file.keys())[list(file.keys()).index(match)]
+            #print(finder)
         except:
+            #print(0)
             return 0
         
-        if finder == 'match':
+        if finder == match:
+            #print(1)
             return 1
+    
+    def merge(a: dict, b: dict, path=[]):
+        for key in b:
+            if key in a:
+                if isinstance(a[key], dict) and isinstance(b[key], dict):
+                    merge(a[key], b[key], path + [str(key)])
+                elif a[key] != b[key]:
+                    raise Exception('Conflict at ' + '.'.join(path + [str(key)]))
+            else:
+                a[key] = b[key]
+        return a
+
+    def add_user(self, first, last, id5):
+        """
+        Add a new user in the database
+        - Call the check user function
+        - if user already exists return error message
+        - if it's a new user add it to the database
+        """     
+
+        user_check = self.check_user(first, last, id5)
         
-    #def add_user(self, first, last, id5):
+        match = first + "_" + last + "_" + str(id5)
+
+        if user_check == 0:
+
+            file = self.read_file()
+            
+            file[match] = {
+                            "first":first,
+                            "last" :last,
+                            "id5"  :str(id5)
+                            }
+
+            json_object = json.dumps(file, indent=4)
+            
+            with open(self.path, "w") as outfile:
+                outfile.write(json_object)
+
+            print("User added.")
+
+        if user_check == 1:
+            print("User already exists.")
+    
         
         
 
@@ -109,5 +149,8 @@ if __name__ == '__main__':
     jsonoperations = JsonOperations()
     jsonoperations.input_validation(first = 'teste', last = 'teste2', id5 = 12345)
     jsonoperations.read_file()
-    jsonoperations.check_user(first = 'teste', last = 'teste2', id5 = 12345)
+
+    #jsonoperations.check_user(first = 'teste', last = 'teste2', id5 = 12345)
     #jsonoperations.check_user(first = 'user', last = 'admin', id5 = 11111)
+
+    jsonoperations.add_user(first = 'teste3', last = 'teste4', id5 = 22222)

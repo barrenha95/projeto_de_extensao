@@ -1,8 +1,17 @@
 {
-    "match": "user_admin_11111",
-    "values": {
+    "user_admin_11111": {
         "first": "user",
         "last": "admin",
         "id5": "11111"
+    },
+    "teste_teste2_12345": {
+        "first": "teste",
+        "last": "teste2",
+        "id5": "12345"
+    },
+    "teste3_teste4_22222": {
+        "first": "teste3",
+        "last": "teste4",
+        "id5": "22222"
     }
 }
