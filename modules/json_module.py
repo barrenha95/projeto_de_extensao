@@ -21,10 +21,12 @@ class JsonOperations:
         
         if check_file == False:
             dictionary = {
+                        "match":"user_admin_11111", "values":
+                            {
                             "first":"user",
                             "last" :"admin",
-                            "id5"  :"11111",
-                            "match":"user_admin_11111"
+                            "id5"  :"11111"
+                            }
             }
         
             json_object = json.dumps(dictionary, indent=4)
@@ -89,7 +91,8 @@ class JsonOperations:
         - If the "match" column matches with the JSON means the user already exists
         """          
         match = first + "_" + last + "_" + str(id5)
-        print(match)
+        file = self.read_file()
+        print(file)
         
     #def add_user(self, first, last, id5):
         
