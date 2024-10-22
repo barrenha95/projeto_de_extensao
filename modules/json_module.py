@@ -92,7 +92,14 @@ class JsonOperations:
         """          
         match = first + "_" + last + "_" + str(id5)
         file = self.read_file()
-        print(file)
+
+        try:
+            finder = list(file.keys())[list(file.values()).index(match)]
+        except:
+            return 0
+        
+        if finder == 'match':
+            return 1
         
     #def add_user(self, first, last, id5):
         
@@ -103,3 +110,4 @@ if __name__ == '__main__':
     jsonoperations.input_validation(first = 'teste', last = 'teste2', id5 = 12345)
     jsonoperations.read_file()
     jsonoperations.check_user(first = 'teste', last = 'teste2', id5 = 12345)
+    #jsonoperations.check_user(first = 'user', last = 'admin', id5 = 11111)
