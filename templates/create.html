@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} User to register {% endblock %}</h1>
+    <form method="post">
+        <label for="title">First name</label>
+        <br>
+        <input type="text" name="title"
+               placeholder="Only numeric characters"
+               value="{{ request.form['title'] }}"></input>
+        <br>
+
+        <label for="title">Last name</label>
+        <br>
+        <input type="text" name="title"
+               placeholder="Only numeric characters"
+               value="{{ request.form['title'] }}"></input>
+        <br>
+
+        <label for="title">Last 5 CPF numbers</label>
+        <br>
+        <input type="text" name="title"
+               placeholder="Only integer numbers"
+               value="{{ request.form['title'] }}"></input>
+        <br>
+        
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
