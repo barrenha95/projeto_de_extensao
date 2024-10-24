@@ -41,11 +41,17 @@ def register():
 
 
 @app.route('/auth/<firstname>/<lastname>/<last5cpf>', methods=['GET'])
-#example: http://127.0.0.1:5000/auth/average/guy/88745
 def api(firstname, lastname, last5cpf):
-    return f'param1: {firstname}, param2: {lastname}, param3: {last5cpf}'
+    jsonoperations = modules.json_module.JsonOperations()
+    check_response = jsonoperations.check_user(first = firstname, last=lastname, id5 = last5cpf)
+    
+    if check_response == 0:
+        return f'param1: {firstname}, param2: {lastname}, param3: {last5cpf} is not registerd.'
+    if check_response == 1:
+        return f'param1: {firstname}, param2: {lastname}, param3: {last5cpf} is registerd.'
+    
 
 
-#app.run()
-
+#flask run --debug
+#example: http://127.0.0.1:5000/auth/average/guy/88745
 # http://127.0.0.1:5000/users
