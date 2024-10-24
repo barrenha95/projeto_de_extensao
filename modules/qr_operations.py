@@ -80,7 +80,7 @@ class QrOperations:
         try :
             server = smtplib.SMTP("smtp.mail.yahoo.com",587)
             server.login(username,password)
-            server.sendmail(fromMy, to,msg)
+            server.sendmail(msg['From'], msg['To'], msg)
             server.quit()    
             print('ok the email has sent ')
         except :
