@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from flask_wtf import Form
 from wtforms import TextAreaField, IntegerField
+import modules.json_module
 
 app = Flask(__name__)
 
@@ -23,17 +24,20 @@ class RegistrationForm(Form):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     error = ""
-    form = RegistrationForm(request.form)
+    formulary = RegistrationForm(request.form)
 
     if request.method == 'POST':
-        firstname = form.firstname.data
-        lastname = form.lastname.data
-        last5cpf = form.last5cpf.data
+        firstname = formulary.firstname.data
+        lastname = formulary.lastname.data
+        last5cpf = formulary.last5cpf.data
 
         if len(firstname) == 0 or len(lastname) == 0 or len(str(last5cpf)) == 0:
             error = "Please fill the form"
+        else:
+            jsonoperations = modules.json_module.JsonOperations()
+            jsonoperations.add_user(first = firstname, last=lastname, id5 = last5cpf)
 
-    return render_template('register.html', form=form, message=error)
+    return render_template('register.html', form=formulary, message=error)
 
 
 @app.route('/auth/<firstname>/<lastname>/<last5cpf>', methods=['GET'])

@@ -112,7 +112,8 @@ class JsonOperations:
         match = first + "_" + last + "_" + str(id5)
 
         if user_check == 0:
-
+            
+            self.input_validation(first, last, id5)
             file = self.read_file()
             
             file[match] = {
