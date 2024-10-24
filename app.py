@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from flask_wtf import Form
 from wtforms import TextAreaField, IntegerField
 import modules.json_module
+import modules.qr_operations
 
 app = Flask(__name__)
 
@@ -20,6 +21,7 @@ class RegistrationForm(Form):
     firstname = TextAreaField('First Name')
     lastname = TextAreaField('Last Name')
     last5cpf = IntegerField('Last 5 CPF digits')
+    email = TextAreaField('Email')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -30,12 +32,17 @@ def register():
         firstname = formulary.firstname.data
         lastname = formulary.lastname.data
         last5cpf = formulary.last5cpf.data
+        email = formulary.email.data
 
         if len(firstname) == 0 or len(lastname) == 0 or len(str(last5cpf)) == 0:
             error = "Please fill the form"
         else:
             jsonoperations = modules.json_module.JsonOperations()
             jsonoperations.add_user(first = firstname, last=lastname, id5 = last5cpf)
+
+            qroperations = modules.qr_operations()
+            
+            error = "User created"
 
     return render_template('register.html', form=formulary, message=error)
 
