@@ -1,9 +1,12 @@
 import qrcode
+import os
 from PIL import Image
 from email.message import EmailMessage
 from email.utils import make_msgid
-import mimetypes
 import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
 
 class QrOperations:
     """
@@ -20,8 +23,6 @@ class QrOperations:
         qr = qrcode.QRCode(version=3, box_size=20, border=10, error_correction=qrcode.constants.ERROR_CORRECT_H)
 
         # Define the data to be encoded in the QR code
-        
-        
         data = "http://127.0.0.1:5000/auth/" + str(first) + "/" + str(last) + "/" + str(id5)
 
         # Add the data to the QR code object
@@ -36,51 +37,36 @@ class QrOperations:
         # Save the QR code image
         img.save("outputs/qr_code.png")
 
-        return img
+        #return img
     
     def sending_qr(self, first, email):
         """
         This class was created send the QR Code to the desired email
         """
 
-        msg = EmailMessage()
+        username = str('my_email')  
+        password = str('my_pwd')  
 
-        # Headers
-        msg['Subject'] = 'Gagos Beer Ticket'
-        msg['From'] = 'GagoBeerAdmin <gago@beer.com.br>'
-        msg['To'] = "'" + str(first) + '<' + str(email) + ">'"
+        msg = MIMEMultipart()
+        msg['From'] = username 
+        msg['To']   = email
+        msg['Subject'] ='TheSubject'
 
-        # the plain text body
-        msg.set_content('Here is your ticket to the Gago Beer.')
+        
+        text=MIMEText('Hello ' + str(first) + ' Or any thing you want to send')
+        msg.attach(text)
 
-        # now create a Content-ID for the image
-        image_cid = make_msgid(domain='beer.com')
+        with open('outputs/qr_code.png', 'rb')as f:
+            img_data = f.read()
 
-        msg.add_alternative("""\
-        <html>
-            <body>
-                <p>Here is your ticket to the:<br>
-                   GAGO BEER.
-                </p>
-                <img src="cid:{image_cid}">
-            </body>
-        </html>
-        """.format(image_cid=image_cid[1:-1]), subtype='html')
+        image = MIMEImage(img_data)
+        msg.attach(image)
 
-        with open('outputs/qr_code.png', 'rb') as img:
-            maintype, subtype = mimetypes.guess_type(img.name)[0].split('/')
-            msg.get_payload()[1].add_related(img.read(), 
-                                         maintype=maintype, 
-                                         subtype=subtype, 
-                                         cid=image_cid)
-            
-        username = str('yourMail@yahoo.com')  
-        password = str('yourPassWord')  
-  
         try :
-            server = smtplib.SMTP("smtp.mail.yahoo.com",587)
+            server = smtplib.SMTP("smtp.mail.yahoo.com", 587)
+            server.starttls() 
             server.login(username,password)
-            server.sendmail(msg['From'], msg['To'], msg)
+            server.sendmail(msg['From'], msg['To'],msg.as_string())
             server.quit()    
             print('ok the email has sent ')
         except :
@@ -96,4 +82,4 @@ if __name__ == '__main__':
     #pil_img = Image.open('outputs/qr_code.png', 'r')
     #pil_img.show()
 
-    qr.sending_qr(first = 'qr', email='barrenha95@yahoo.com.br')
+    qr.sending_qr(first = 'qr', email='email_i_want_to_send')

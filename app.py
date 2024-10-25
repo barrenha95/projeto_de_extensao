@@ -40,8 +40,10 @@ def register():
             jsonoperations = modules.json_module.JsonOperations()
             jsonoperations.add_user(first = firstname, last=lastname, id5 = last5cpf)
 
-            qroperations = modules.qr_operations()
-            
+            qroperations = modules.qr_operations.QrOperations()
+            qroperations.generating_qr(first = firstname, last=lastname, id5 = last5cpf)
+            qroperations.sending_qr(first = firstname, email = email)
+
             error = "User created"
 
     return render_template('register.html', form=formulary, message=error)
