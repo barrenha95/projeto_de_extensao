@@ -1,5 +1,12 @@
 import qrcode
+import os
 from PIL import Image
+from email.message import EmailMessage
+from email.utils import make_msgid
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
 
 class QrOperations:
     """
@@ -10,12 +17,13 @@ class QrOperations:
     - [Debug purpose] Reading of a QR Code checking if it works properly
     """
 
-    def generating_qr(temp = "null"):
+    def generating_qr(self, first, last, id5):
+        
         # Create a QR code object with a larger size and higher error correction
         qr = qrcode.QRCode(version=3, box_size=20, border=10, error_correction=qrcode.constants.ERROR_CORRECT_H)
 
         # Define the data to be encoded in the QR code
-        data = "https://medium.com/@rahulmallah785671/create-qr-code-by-using-python-2370d7bd9b8d"
+        data = "http://127.0.0.1:5000/auth/" + str(first) + "/" + str(last) + "/" + str(id5)
 
         # Add the data to the QR code object
         qr.add_data(data)
@@ -29,10 +37,49 @@ class QrOperations:
         # Save the QR code image
         img.save("outputs/qr_code.png")
 
+        #return img
+    
+    def sending_qr(self, first, email):
+        """
+        This class was created send the QR Code to the desired email
+        """
+
+        username = str('my_email')  
+        password = str('my_pwd')  
+
+        msg = MIMEMultipart()
+        msg['From'] = username 
+        msg['To']   = email
+        msg['Subject'] ='TheSubject'
+
+        
+        text=MIMEText('Hello ' + str(first) + ' Or any thing you want to send')
+        msg.attach(text)
+
+        with open('outputs/qr_code.png', 'rb')as f:
+            img_data = f.read()
+
+        image = MIMEImage(img_data)
+        msg.attach(image)
+
+        try :
+            server = smtplib.SMTP("smtp.mail.yahoo.com", 587)
+            server.starttls() 
+            server.login(username,password)
+            server.sendmail(msg['From'], msg['To'],msg.as_string())
+            server.quit()    
+            print('ok the email has sent ')
+        except :
+            print('can\'t send the Email')
+            
+        
+
 if __name__ == '__main__':
     
     qr = QrOperations()
-    qr.generating_qr()
+    qr.generating_qr(first = 'qr', last = 'test', id5 = 11111)
 
-    pil_img = Image.open('outputs/qr_code.png', 'r')
-    pil_img.show()
+    #pil_img = Image.open('outputs/qr_code.png', 'r')
+    #pil_img.show()
+
+    qr.sending_qr(first = 'qr', email='email_i_want_to_send')
