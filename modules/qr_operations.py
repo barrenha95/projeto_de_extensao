@@ -44,7 +44,7 @@ class QrOperations:
         This class was created send the QR Code to the desired email
         """
 
-        username = str('my_email')  
+        username = str('email_used_to_send_qr_code')  
         password = str('my_pwd')  
 
         msg = MIMEMultipart()
@@ -53,7 +53,7 @@ class QrOperations:
         msg['Subject'] ='TheSubject'
 
         
-        text=MIMEText('Hello ' + str(first) + ' Or any thing you want to send')
+        text=MIMEText('Olá ' + str(first) + ' aqui está seu ingresso para a Gago Beer.')
         msg.attach(text)
 
         with open('outputs/qr_code.png', 'rb')as f:

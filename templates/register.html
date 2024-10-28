@@ -18,5 +18,10 @@
     {{ form.email.label }}{{ form.email(size=20) }}
     </p>
     <input type="submit" value="Register">
+
+    {% if error%}
+    <p><strong>{{error}}</strong></p>
+    {% endif%}
+
     </form>
 {% endblock %}

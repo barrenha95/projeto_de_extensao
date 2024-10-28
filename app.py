@@ -1,16 +1,35 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, flash, url_for
 from flask_wtf import Form
 from wtforms import TextAreaField, IntegerField
 import modules.json_module
 import modules.qr_operations
 
 app = Flask(__name__)
+app.secret_key = "auth"
+
 
 messages = [{'title': 'Register',
              'content': 'Add someone on the event allowed list.'},
             {'title': 'Remove',
              'content': 'Remove someone on the event allowed list.'}
             ]
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == "POST":
+        if request.form['pass'] != app.secret_key:
+            error = "Invalid Password"
+        else:
+            flash("You are successfully login into the Flask Application")
+            return redirect(url_for('row'))
+
+    return render_template("login.html", error=error)
+
+# row function for profile.html
+@app.route("/profile")
+def row():
+    return render_template("profile.html")
 
 @app.route('/')
 def index():
@@ -44,7 +63,8 @@ def register():
             qroperations.generating_qr(first = firstname, last=lastname, id5 = last5cpf)
             qroperations.sending_qr(first = firstname, email = email)
 
-            error = "User created"
+            error='User registered in the list!'
+            return redirect(url_for('index'))
 
     return render_template('register.html', form=formulary, message=error)
 
